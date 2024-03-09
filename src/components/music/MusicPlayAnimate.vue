@@ -1,0 +1,63 @@
+<template>
+  <div class="music-play">
+    <div class="bg-primary"></div>
+    <div class="bg-primary"></div>
+    <div class="bg-primary"></div>
+  </div>
+</template>
+
+<script setup>
+const props = defineProps({
+  state: {
+    type: Boolean,
+    default: true,
+  },
+});
+</script>
+
+<style lang="sass" scoped>
+// TODO 音乐播放器动画
+//  ? 动画停止class >>> .muscic-play-stop
+// HTML结构
+// <div class="music-play">
+//     <div></div>
+//     <div></div>
+//     <div></div>
+// </div>
+
+$music-play-box-height: 16px//音乐播放状态高度
+$music-play-width: 3.2px//音乐播放状态宽度
+$music-play-delys: .5s//音乐播放状态动画延迟
+$music-play-gap: 6px//音乐播放状态间距
+$music-animate-time: .75s//动画播放时长
+$music-play-radius: 4px 4px 0 0 //圆角
+$music-play-pos: center bottom//动画位置
+
+.music-play
+  display: inline-block
+  width: calc(#{$music-play-width * 3 + $music-play-gap })
+  position: relative
+  height: $music-play-box-height
+
+.music-play>div
+  position: absolute
+  width: $music-play-width
+  height: 100%
+  border-radius: $music-play-radius
+  animation: music-play-an #{$music-animate-time} linear infinite
+  transform-origin: $music-play-pos
+  animation-play-state: v-bind('props.state===true?"running":"paused"')
+
+@for $i from 1 through 3
+  .music-play>div:nth-child(#{$i})
+    animation-delay: calc(#{($i - 1) * $music-play-delys})
+    margin-left: calc(#{$music-play-gap * ($i - 1)})
+
+@keyframes music-play-an
+  0%,
+  100%
+    transform: scaleY(1)
+
+  50%
+    transform: scaleY(0)
+</style>

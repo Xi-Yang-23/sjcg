@@ -1,0 +1,26 @@
+@import url('./userNameStyle.sass')
+@import url('./card.sass')
+
+/**
+ * $pos {Number{require,String}} 渐变方向 例：【to bottom】【to top】
+ */
+@mixin card-grad($pos)
+    background: linear-gradient($pos, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 100%)
+    background: -webkit-linear-gradient($pos, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 100%)
+    background: -moz-linear-gradient($pos, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 100%)
+    background: -o-linear-gradient($pos, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 100%)
+    background: -ms-linear-gradient($pos, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 100%)
+
+.card .q-img__content > div
+    padding: 8px
+    @include card-grad(to bottom)
+
+.lgr-tb
+    @include card-grad(to bottom)
+
+.lgr-tt
+    @include card-grad(to top)
+
+.bg-ts-dark
+    background: rgba(0,0,0,.35)
+ 
