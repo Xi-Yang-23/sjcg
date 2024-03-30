@@ -1,5 +1,7 @@
 // 使用 Mock
 import Mock from 'mockjs'
+import comment from './video'
+
 
 Mock.setup({
     timeout: '100-2000'
@@ -235,3 +237,13 @@ Mock.mock('/lunbo', {
         }
     ],
 })
+
+//  评论
+// Mock.mock('/video/comments', video)
+// 获取子评论
+/**
+ * @param {Number}  t 0 | 父评论 | 1 获取子评论 | 2 删除评论 
+ * @param {Number}  page 第几页
+ * @param {Number}  count 获取几条
+ */
+Mock.mock(/\/api\/comments.*?/, comment)

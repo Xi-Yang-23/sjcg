@@ -515,14 +515,14 @@ watchEffect(() => {
 });
 
 onBeforeMount(async () => {
-  console.log(await home());
+  // console.log(await home());
   // console.log(await axios.get("/api/home"));
 
-  // const home = await axios.get("/home");
-  // const lunBo = await axios.get("/lunbo");
+  const home = await axios.get("/home");
+  const lunBo = await axios.get("/lunbo");
 
-  // loadStart.data.value = home.data.lists;
-  // carousel.value = lunBo.data.carousel;
+  loadStart.data.value = home.data.lists;
+  carousel.value = lunBo.data.carousel;
 });
 
 // 音乐播放器动画

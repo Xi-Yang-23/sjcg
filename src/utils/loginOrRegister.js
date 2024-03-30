@@ -272,7 +272,8 @@ const onSubmit = async () => {
                         pwd: enPwd,
                         email: enEmail,
                         sign,
-                        nt
+                        nt,
+                        role
                     }
                 })
 

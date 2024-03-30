@@ -4,9 +4,7 @@ import { nodeRsa } from "../../utils/nodePubPrikey.js";
 import sendEmail from "../nodemailer.js";
 import { hd, sendEmailInfo, ramNum } from '../cfg.js'
 import Yzm from "../mongoose/models/yzmModel.js";
-import { disconnect } from "mongoose";
-import conDb from "../mongoose/index.js";
-
+// import { conn, closeConn } from "../mongoose/index.js";
 
 const { prikey } = hd
 
@@ -44,15 +42,14 @@ const subYzm = async (req, res) => {
 
     // 邮箱验证码发送成功
     if (sendEmailRes) {
-        await conDb(1)//连接数据库
+        // await conn(1)//连接数据库
 
         await new Yzm({
             val: yzm,
             email: nowEmail
         }).save()
 
-
-        await disconnect()//销毁数据库连接 
+        // closeConn()//关闭数据库连接
 
         return res.json({
             statu: 200,

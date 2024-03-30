@@ -1,9 +1,10 @@
 import md5 from "../../utils/md5.js";
-import { disconnect } from "mongoose";
-import conDb from "../mongoose/index.js";
 import { qqEmailRules } from "../../utils/rules.js";
 import Users from "../mongoose/models/usersModel.js";
 import { verToken } from "../jwt.js";
+// import { conn, closeConn } from "../mongoose/index.js";
+
+// await conn()
 
 /** 
  * @api {get} /api/menuauth   菜单+权限+用户基本信息
@@ -36,22 +37,23 @@ const menuAndAuth = async (req, res) => {
         })
     }
 
-    await conDb()//连接数据库 
+    // await conn()//连接数据库 
     const findUser = await Users.findOne({ email }, '-createdAt -updatedAt -__v -pwd -_id -role._id -token')
     // 没有这个邮箱的用户
     if (!findUser) {
-        await disconnect()//销毁数据库连接  
+        // await closeConn()//关闭数据库连接
         return res.json({
             statu: 203,
         })
     }
 
-    // 有效邮箱 
-    await disconnect()//销毁数据库连接  
+
+    // 有效邮箱  
     res.json({
         statu: 200,
         msg: findUser
     })
+    // await closeConn()//关闭数据库连接
 }
 
 export default menuAndAuth

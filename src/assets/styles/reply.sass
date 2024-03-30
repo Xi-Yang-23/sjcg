@@ -1,0 +1,75 @@
+// 评论输入框
+.start-reply
+    justify-content: end !important
+
+.textarea
+    min-height: 36px
+    max-height: 100px
+    max-width: 100%
+    overflow-y: scroll
+    outline: none
+    background: rgba(111, 111, 111, 0.1)
+    scrollbar-width: none
+    -ms-overflow-style: none
+    letter-spacing: .6px
+
+.xv-ni
+    height: 36px
+    line-height: 36px
+
+.textarea:empty:before
+    content: attr(placeholder)
+    color: #999
+
+.textarea:focus:placeholder-shown
+    content: none
+
+.reply-bar-hei
+    scrollbar-width: none
+    -ms-overflow-style: none
+    height: 200px
+    overflow-y: scroll
+
+.reply-at
+    @extend .reply-bar-hei
+    max-height: 160px
+
+.reply-bar-select
+    background: rgba(111, 111, 111, 0.25) !important
+
+.at-user
+    text-decoration: none
+    display: inline-block
+
+.emjio-img
+    width: 1.25rem
+    height: 1.25rem
+    vertical-align: middle
+
+.open-gpu
+    transform: translate3d(0, 0, 0)
+    will-change: transform
+
+.tip-show
+    animation: tip-show cubic-bezier(0.18, 0.89, 0.32, 1.28) 0.6s forwards .2s
+
+@keyframes tip-show
+    0%
+        transform: translateX(-150%)
+    100%
+        transform: translateX(0)
+
+.tip-max
+    animation: tip-max ease-in 0.6s backwards
+
+@keyframes tip-max
+    0%
+        transform: translateX(0)
+    25%
+        transform: translateX(-10px)
+    50%
+        transform: translateX(10px)
+    75%
+        transform: translateX(-10px)
+    100%
+        transform: translateX(0)

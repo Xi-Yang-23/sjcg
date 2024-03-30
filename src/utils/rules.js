@@ -79,7 +79,7 @@ const qqEmailRules = Email => {
  * @param {String} txt 处理的字符串
  * @returns String 返回处理过的字符
  */
-const userNameReplace = (txt) => txt.replace(/\s{2,}/g, ' ').trim()
+const userNameReplace = txt => txt.replace(/\s{2,}/g, ' ').trim()
 
 /**
  * 用户昵称校验
@@ -103,12 +103,45 @@ const userNameRules = userName => {
 }
 
 
+/**
+ * 贡献值验证
+ * @param {Number} val 贡献值
+ */
+const giveGxinRule = val => {
+    const len = val.length
+    if (len > 4) return '只能输入4位数字，最多9999'
+    const test = /\d/.test(val)
+
+    if (test) return true
+
+    return '只能输入数字'
+}
+
+/**
+ * 收藏夹名称校验 2-30字符之间
+ * @param {String} val 校验的文本
+ * @returns Boolean
+ */
+const newColsRule = val => {
+
+    const replaceSpace = val.replace(/\s/gi, ''),
+        valLen = replaceSpace.length;
+
+    if (!valLen) return false
+
+    if (valLen >= 2 && valLen < 30) return true
+
+}
+
 export {
+    newColsRule,
+
     yzmRules,
     pwdRules,
     qqEmailRules,
     userNameRules,
     userNameReplace,
     describeReplace,
-    describeRule
+    describeRule,
+    giveGxinRule
 }

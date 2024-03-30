@@ -9,8 +9,24 @@ const theme = defineStore('theme', {
     state: () => ({
         primaryColor: null,//主色
         dark: false,// 暗黑主题   
+        //评论框主题 | 已拥有的主题
+        replyTheme: [
+            {
+                value: 'macDark',
+                class: 'mac-dark',
+                selcet: false,//是否启用主题
+            }
+        ],
     }),
+    // persist: {
+    //     // 数据恢复后
+    //     afterRestore: (ctx) => {
+    //         if (ctx.store.primaryColor) setCssVar('primary', ctx.store.primaryColor)
+    //         if (ctx.store.dark !== null) Dark.set(ctx.store.dark)
+    //     },
+    // },
     persist: {
+        paths: ['primaryColor', 'replyTheme', 'dark'],
         // 数据恢复后
         afterRestore: (ctx) => {
             if (ctx.store.primaryColor) setCssVar('primary', ctx.store.primaryColor)

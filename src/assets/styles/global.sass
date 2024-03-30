@@ -1,5 +1,7 @@
 @import url('./userNameStyle.sass')
 @import url('./card.sass')
+@import url('./reply.sass')
+@import url('./video.sass')
 
 /**
  * $pos {Number{require,String}} 渐变方向 例：【to bottom】【to top】
@@ -23,4 +25,15 @@
 
 .bg-ts-dark
     background: rgba(0,0,0,.35)
- 
+
+//  用户认证标识位置微调
+.ren-zheng
+    transform: translate(3px, 4px)
+
+.op-0
+    opacity: 0
+
+// 滚动元素宽度超出限制
+.set-scroll-width .q-scrollarea__content
+    width: 100%
+  

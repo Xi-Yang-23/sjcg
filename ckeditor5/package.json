@@ -1,7 +1,7 @@
 {
   "name": "ckeditor5-build",
   "author": "ShuaiBi",
-  "description": "集成所有ckeditor5的免费功能，安装即用。注意版本-》41.2.0",
+  "description": "集成所有ckeditor5的免费功能,安装即用。注意版本-》41.2.0",
   "version": "0.0.7",
   "readme": "查看README.md",
   "private": true,

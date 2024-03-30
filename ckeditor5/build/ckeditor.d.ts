@@ -33,7 +33,7 @@ import { Style } from "@ckeditor/ckeditor5-style";
 import { Table, TableCaption, TableCellProperties, TableColumnResize, TableProperties, TableToolbar } from "@ckeditor/ckeditor5-table";
 import { Undo } from "@ckeditor/ckeditor5-undo";
 import { EditorWatchdog } from "@ckeditor/ckeditor5-watchdog";
-import NowTime from "./plugins/nowTime";
+import NowTime from "./plugins/nowTime.js";
 declare class Editor extends ClassicEditor {
     static builtinPlugins: (typeof NowTime | typeof ImageInsert | typeof HorizontalLine | typeof Alignment | typeof Autoformat | typeof BlockQuote | typeof Bold | typeof Code | typeof CodeBlock | typeof DataFilter | typeof Essentials | typeof FontBackgroundColor | typeof FontColor | typeof FontFamily | typeof FontSize | typeof Heading | typeof Highlight | typeof HtmlEmbed | typeof Image | typeof ImageCaption | typeof ImageResize | typeof ImageStyle | typeof ImageToolbar | typeof Indent | typeof Italic | typeof Link | typeof LinkImage | typeof List | typeof ListProperties | typeof Markdown | typeof Mention | typeof RemoveFormat | typeof SelectAll | typeof ShowBlocks | typeof SpecialCharactersEssentials | typeof StandardEditingMode | typeof Strikethrough | typeof Style | typeof Subscript | typeof Superscript | typeof Table | typeof TableCaption | typeof TableCellProperties | typeof TableColumnResize | typeof TableProperties | typeof TableToolbar | typeof TodoList | typeof Underline | typeof Undo)[];
     static defaultConfig: EditorConfig;

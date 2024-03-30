@@ -10,7 +10,7 @@ import cors from 'cors'
 import { dirname, join, resolve } from 'path'
 import menuAndAuth from './routes/menuAndAuth.js';
 import servSse from './routes/servSse.js';
-
+import './mongoose/index.js'
 
 
 const app = express(),

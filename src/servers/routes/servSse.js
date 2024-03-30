@@ -3,10 +3,10 @@ import md5 from "../../utils/md5.js";
 import { hd } from "../cfg.js";
 import { AES } from "../../utils/aes.js";
 import Users from "../mongoose/models/usersModel.js";
-import { disconnect } from "mongoose";
 import { verToken } from "../jwt.js";
-import conDb from "../mongoose/index.js";
+// import { conn, closeConn } from "../mongoose/index.js";
 
+// const conDb = await conn(1)// 数据库连接 
 /**  
  * @api {get} /api/see 建立信息推送连接
  * @apiVersion 0.0.0
@@ -25,6 +25,7 @@ const servSse = async (req, res) => {
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive'
     });
+    res.flushHeaders()
 
     const { key, sign, token, nt } = req.query
 
@@ -45,51 +46,62 @@ const servSse = async (req, res) => {
 
     // token过期
     if (!tkIsGood) {
-        return res.json({
-            statu: 202
-        })
+        return res.end()
     }
 
     // 解构出email
     const { email: em } = tkIsGood
 
-    // 注意：数据库要在定时器内操作，定时器外操作会报错
+
+    // 注意：数据库要在延迟后再操作，否则连接不成功
+
+    // conDb = await conn(1)// 数据库连接
+
+    //  数据库连接失败
+    // if (conDb === false) {console.log(',,,,,,,,,');
+    //     return res.end()
+    // }
+
+    const findUser = await Users.findOne({ email: em })
+
+    // 用户上线
+    console.log(`用户${em}已上线`);
+    // 没有这个邮箱用户
+    if (!findUser) {
+        clearInterval(timer)
+        return res.end()
+    }
+
+    // 用户刚上线
+    if (findUser.online !== 0) {
+        findUser.online = 1
+        await findUser.save()
+    }
+
     timer = setInterval(async () => {
-        // 用户上线
-        if (pushCount === 0) {
-            // 数据库连接
-            await conDb(1)
-            const findUser = await Users.findOne({ email: em })
-            // 没有这个邮箱用户
-            if (!findUser) {
-                return res.end()
-            }
-            findUser.online++
-            await findUser.save()
-            await disconnect()//销毁数据库连接  
-        }
-
-        pushCount++
-
         // 前端推送
         const UserStatu = res.write('data:hi\n\n')
 
         // 用户断开连接 
         if (!UserStatu) {
-            console.log('用户离线', pushCount);
-            // 数据库连接
-            await conDb(1)
-            const findUser = await Users.findOne({ email: em })
-            findUser.online--
-            await findUser.save()
-            await disconnect()//销毁数据库连接
-
             clearInterval(timer)
             return res.end()
         }
 
+        pushCount++
         console.log('---------', pushCount);
     }, 3000);
+
+
+    req.on('close', async () => {
+        if (findUser) {
+            findUser.online = 0
+            await findUser.save()
+            // await closeConn()//关闭数据库连接 
+            console.log(`用户${em}已离线，关闭数据库`);
+        }
+    })
+
 }
 
 export default servSse

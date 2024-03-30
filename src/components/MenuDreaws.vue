@@ -1,10 +1,8 @@
 <template>
   <q-drawer
-    v-model="drawer"
-    show-if-above
+    v-model="useLayOutStateStore.dreaws"
     :width="200"
     :breakpoint="599.99"
-    bordered
   >
     <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
       <div class="lt-sm flex justify-center items-center">
@@ -15,14 +13,14 @@
       </div>
 
       <q-separator />
-      
+
       <!-- 大屏导航 -->
       <q-list padding>
         <q-item
           class="gt-xs"
           clickable
           v-ripple
-          v-for="(tabItem, i) in tabsMenu"
+          v-for="(tabItem, i) in useUserInfo.role.menu"
           :to="tabItem.to"
           :key="i"
         >
@@ -143,14 +141,12 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
 import { theme } from "../stores/themeStore";
-
+import layOutStateStore from "../stores/layoutState";
+import useUserInfoStore from "../stores/userInfo";
 const themeStore = theme();
-
-const tabsMenu = inject("tabsMenu");
-
-const drawer = inject("drawer");
+const useUserInfo = useUserInfoStore();
+const useLayOutStateStore = layOutStateStore();
 </script>
 
 <style scoped lang="sass">

@@ -88,8 +88,6 @@ const upSexOrDescribeOrAvatarOrBg = () => {
  */
 const upFile = (v) => {
     if (!v) return
-
-    var fr = new FileReader();
     const windowURL = window.URL || window.webkitURL,
         blob = windowURL.createObjectURL(user.fileModel);
 

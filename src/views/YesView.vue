@@ -1,270 +1,128 @@
- <template>
-  <ckeditor
-    :editor="editor"
-    :config="editorConfig"
-    v-model="editorData"
-    :disabled="editorDisabled"
-    @ready="ready"
-  ></ckeditor>
+<template>
+  <q-page padding>
+    <q-item v-for="(it, i) in showOrHideTextStatu">
+      <q-item-section>
+        <q-item-label
+          caption
+          :lines="it.lines"
+          ref="essOutEl"
+          class="text-body1"
+        >
+          <span v-if="i === 0"> 文本文本文本文本文本文本文本文 </span>
+          <span v-else>
+            文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本文本
+          </span>
+        </q-item-label>
+      </q-item-section>
+      <q-item-section side class="no-padding self-end">
+        <q-checkbox
+          v-if="!it.dis"
+          v-model="it.show"
+          dense
+          size="sm"
+          color="blue-grey"
+          checked-icon="arrow_drop_up"
+          unchecked-icon="arrow_drop_down"
+          @update:model-value="textOverOpenClick(it)"
+        />
+      </q-item-section>
+    </q-item>
+    <!--  animated bounceInLeft slow -->
+    <!-- srcElement.offsetParent.offsetParent -->
+    <q-infinite-scroll @load="onLoad" :offset="250" class="cont">
+      <q-item v-for="i in arr" :key="i" class="box op-0">
+        <q-item-section top avatar>
+          <q-avatar color="primary" text-color="white" icon="bluetooth" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{ i }}Single line item</q-item-label>
+          <q-item-label caption lines="2">Secondary line text.</q-item-label>
+        </q-item-section>
+        <q-item-section side top>
+          <q-item-label caption>5 min ago</q-item-label>
+          <q-icon name="star" color="yellow" />
+        </q-item-section>
+      </q-item>
+      <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
+  </q-page>
 </template>
-
+  
 <script setup>
-import CKEditor from "@ckeditor/ckeditor5-vue";
-import { Editor } from "ckeditor5-build";
-import { ref } from "vue";
+import { gsap } from "gsap";
+import { random } from "gsap/gsap-core";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
+import { nextTick, onMounted, ref } from "vue";
+import { anInit, createBatch } from "../utils/animate";
+import { textOverInit, textOverOpenClick } from "../utils/textOver";
 
-const ready = (editor) => {};
-
-const ckeditor = CKEditor.component;
-const editor = ref(Editor);
-const editorDisabled = ref(false);
-const editorData = ref("");
-const editorConfig = ref({
-  // 样式
-  style: {
-    definitions: [
-      {
-        name: "Article category",
-        element: "h3",
-        classes: ["category"],
-      },
-      {
-        name: "Title",
-        element: "h2",
-        classes: ["document-title"],
-      },
-      {
-        name: "Subtitle",
-        element: "h3",
-        classes: ["document-subtitle"],
-      },
-      {
-        name: "Info box",
-        element: "p",
-        classes: ["info-box"],
-      },
-      {
-        name: "Side quote",
-        element: "blockquote",
-        classes: ["side-quote"],
-      },
-      {
-        name: "Marker",
-        element: "span",
-        classes: ["marker"],
-      },
-      {
-        name: "Spoiler",
-        element: "span",
-        classes: ["spoiler"],
-      },
-      {
-        name: "Code (dark)",
-        element: "pre",
-        classes: ["fancy-code", "fancy-code-dark"],
-      },
-      {
-        name: "Code (bright)",
-        element: "pre",
-        classes: ["fancy-code", "fancy-code-bright"],
-      },
-    ],
+/**
+ * @lines String|number default:1 动态改变的数值，例如： 1 2 3.... 。none 没有限制
+ * @show boolean default:fasle 显示、隐藏展开按钮。 true 显示 | false 隐藏
+ * @once boolean defalut:false  true:只触发一次 false:触发多次
+ * @val String|number defalut:1 当前显示的行数
+ * @dis false boolean defalut:false 销毁展开按钮
+ */
+const essOutEl = ref();
+const showOrHideTextStatu = ref([
+  {
+    lines: 1,
+    val: 1,
+    show: false,
+    once: false,
+    isOver: false,
+    dis: false,
   },
-
-  // htmlEmbed: {
-  //   showPreviews: true,
-  //   sanitizeHtml: (inputHtml) => {
-  //     // 校验危险script
-  //     // const outputHtml = sanitize(inputHtml);
-
-  //     return {
-  //       html: outputHtml,
-  //       // true or false depending on whether the sanitizer stripped anything.
-  //       hasChanged: true,
-  //     };
-  //   },
-  // },
-
-  // 标题
-  title: {
-    placeholder: "标题...",
+  {
+    lines: 2,
+    show: false,
+    val: 2,
+    dis: false,
+    once: true,
+    isOver: false,
   },
-  placeholder: "输入的内容...",
-
-  // 查找替换
-  findAndReplace: {
-    uiType: "dropdown",
+  {
+    lines: 3,
+    show: false,
+    once: false,
+    isOver: false,
+    val: 3,
+    dis: false,
   },
+]);
 
-  // 高亮
-  highlight: {
-    options: [
-      {
-        model: "greenMarker",
-        class: "marker-green",
-        title: "Green marker",
-        color: "var(--ck-highlight-marker-green)",
-        type: "marker",
-      },
-      {
-        model: "redPen",
-        class: "pen-red",
-        title: "Red pen",
-        color: "var(--ck-highlight-pen-red)",
-        type: "pen",
-      },
-      {
-        model: "yellowMarker",
-        class: "marker-yellow",
-        title: "Yellow Marker",
-        color: "var(--ck-highlight-marker-yellow)",
-        type: "marker",
-      },
-      {
-        model: "greenMarker",
-        class: "marker-green",
-        title: "Green marker",
-        color: "var(--ck-highlight-marker-green)",
-        type: "marker",
-      },
-      {
-        model: "pinkMarker",
-        class: "marker-pink",
-        title: "Pink marker",
-        color: "var(--ck-highlight-marker-pink)",
-        type: "marker",
-      },
-      {
-        model: "blueMarker",
-        class: "marker-blue",
-        title: "Blue marker",
-        color: "var(--ck-highlight-marker-blue)",
-        type: "marker",
-      },
-      {
-        model: "redPen",
-        class: "pen-red",
-        title: "Red pen",
-        color: "var(--ck-highlight-pen-red)",
-        type: "pen",
-      },
-      {
-        model: "greenPen",
-        class: "pen-green",
-        title: "Green pen",
-        color: "var(--ck-highlight-pen-green)",
-        type: "pen",
-      },
-    ],
-  },
+gsap.registerPlugin(TextPlugin);
 
-  // 左侧迷你bar
-  blockToolbar: [],
-  // bar
-  toolbar: {
-    shouldNotGroupWhenFull: true, //显示全部 | 隐藏
-    items: [
-      "undo",
-      "redo",
-      "alignment:left",
-      "alignment:right",
-      "alignment:center",
-      "alignment:justify",
-      "outdent",
-      "indent",
-      "|",
-      "toDoList",
-      "bulletedList",
-      "numberedList",
-      "specialCharacters",
-      "horizontalLine",
-      "|",
-      "heading",
-      "|",
-      "style",
-      "|",
-      "bold",
-      "italic",
-      "strikethrough",
-      "Underline",
-      "Superscript",
-      "Superscript",
-      "RemoveFormat",
-      "|",
-      "code",
-      "codeBlock",
-      "htmlEmbed",
-      "fontSize",
-      "fontFamily",
-      "fontColor",
-      "fontBackgroundColor",
-      "|",
-      "link",
-      "ImageInsert",
-      "insertTable",
-      "blockQuote",
-      "|",
-      "findAndReplace",
-      "SelectAll",
-      "ShowBlocks",
-      "NowTime",
-      "AccessibilityHelp",
-    ],
-  },
+const a = ref(0);
+const arr = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
- 
-  // @
-  mention: {
-    feeds: [
-      {
-        marker: "@",
-        feed: [
-          "@apple",
-          "@bears",
-          "@brownie",
-          "@cake",
-          "@cake",
-          "@candy",
-          "@canes",
-          "@chocolate",
-          "@cookie",
-          "@cotton",
-          "@cream",
-          "@cupcake",
-          "@danish",
-          "@donut",
-          "@dragée",
-          "@fruitcake",
-          "@gingerbread",
-          "@gummi",
-          "@ice",
-          "@jelly-o",
-          "@liquorice",
-          "@macaroon",
-          "@marzipan",
-          "@oat",
-          "@pie",
-          "@plum",
-          "@pudding",
-          "@sesame",
-          "@snaps",
-          "@soufflé",
-          "@sugar",
-          "@sweet",
-          "@topping",
-          "@wafer",
-        ],
-        minimumCharacters: 1,
-      },
-    ],
-  },
+const onLoad = (i, t) => {
+  const dataLen = arr.value.length;
+  setTimeout(async () => {
+    arr.value.splice(arr.value.length, 0, ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    // arr.value.unshift(...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    t();
+
+    await nextTick();
+    const getChildEl = document.querySelectorAll(
+      `.box:nth-child(n+${dataLen + 1})`
+    );
+
+    createBatch(getChildEl);
+    ScrollTrigger.refresh();
+  }, 1000);
+};
+onMounted(() => {
+  anInit(".box");
+  console.log(essOutEl.value);
+  textOverInit(essOutEl.value, showOrHideTextStatu.value, 0);
 });
 </script>
- 
- 
+
 <style lang="sass">
-// @背景色
-:root
-  --ck-color-mention-background: hsla(220, 100%, 54%, 0.4)
-  --ck-color-mention-text: hsl(0, 0%, 15%)
 </style>

@@ -6,8 +6,8 @@ import Users from "../mongoose/models/usersModel.js";
 import { pwdRules, qqEmailRules } from "../../utils/rules.js";
 import by from "../../utils/pwdBiDui.js";
 import { getToken } from "../jwt.js";
-import { disconnect } from "mongoose";
-import conDb from "../mongoose/index.js";
+// import { conn, closeConn } from "../mongoose/index.js";
+
 
 
 /**  
@@ -59,12 +59,12 @@ const login = async (req, res) => {
         })
     }
 
-    await conDb(1)//连接数据库 
+    // await conn(1)//连接数据库 
     // 校验邮箱+密码校验通过 
     const findUser = await Users.findOne({ email: nowEmail });  //  查询邮箱 
     // 邮箱不存在
     if (!findUser) {
-        await disconnect()//销毁数据库连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 204
         })
@@ -75,7 +75,7 @@ const login = async (req, res) => {
     const pwdBidui = by(desPwd, findUser.pwd)
     // 密码错误
     if (!pwdBidui) {
-        await disconnect()//销毁数据库连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 202
         })
@@ -103,8 +103,7 @@ const login = async (req, res) => {
         role: findUser.role,
     })
 
-    // 关闭数据库连接
-    await disconnect()
+    // closeConn()//关闭数据库连接
 }
 
 export default login

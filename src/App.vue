@@ -1,11 +1,15 @@
 <template>
   <q-layout view="hHh Lpr lff" container class="window-height">
-    <q-header reveal :class="themeStore.toolBarColor">
+    <q-header
+      reveal
+      :class="themeStore.toolBarColor"
+      v-show="useLayOutStateStore.homeHeader"
+    >
       <q-toolbar>
         <q-btn
-          :color="drawer ? 'primary' : ''"
+          :color="useLayOutStateStore.dreaws ? 'primary' : ''"
           flat
-          @click="drawer = !drawer"
+          @click="useLayOutStateStore.dreawsToggle"
           round
           icon="menu"
           class="lt-sm"
@@ -70,70 +74,7 @@
             <q-badge color="red" rounded floating>6</q-badge>
             <q-tooltip class="desktop-only">通知</q-tooltip>
           </q-btn>
-
-          <!-- 发布内容 -->
-          <q-fab
-            push
-            v-model="addContent"
-            icon="add"
-            color="primary"
-            padding="xs"
-            direction="down"
-          >
-            <template v-slot:tooltip>
-              <q-tooltip class="desktop-only">发布内容</q-tooltip>
-            </template>
-            <q-fab-action
-              external-label
-              label-position="left"
-              push
-              color="positive"
-              icon="music_note"
-              label="音乐"
-              anchor="start"
-            />
-
-            <q-fab-action
-              external-label
-              label-position="left"
-              push
-              color="secondary"
-              icon="translate"
-              label="博文"
-              :to="'/article/ctedit'"
-              anchor="start"
-            />
-
-            <q-fab-action
-              external-label
-              label-position="left"
-              push
-              color="accent"
-              icon="ondemand_video"
-              label="视频"
-              anchor="start"
-            />
-            <q-fab-action
-              external-label
-              label-position="left"
-              push
-              color="yellow"
-              icon="image"
-              label="图片"
-              anchor="start"
-            />
-            <q-fab-action
-              external-label
-              label-position="left"
-              push
-              color="blue-grey"
-              icon="image"
-              label="草稿"
-              anchor="start"
-            />
-          </q-fab>
         </div>
-
         <!-- 登录 -->
         <q-btn
           v-else
@@ -141,12 +82,45 @@
           unelevated
           label="登录"
           @click="useUserInfo.loginAlert = true"
+          class="q-mr-sm"
         />
+
+        <!-- 发布内容 -->
+        <q-fab
+          push
+          v-model="addContent"
+          icon="add"
+          color="primary"
+          padding="xs"
+          direction="down"
+        >
+          <template v-slot:tooltip>
+            <q-tooltip class="desktop-only">发布内容</q-tooltip>
+          </template>
+
+          <q-fab-action
+            v-for="(fabItem, index) in subArticlesInfo"
+            :key="index"
+            external-label
+            label-position="left"
+            push
+            :color="fabItem.color"
+            :icon="fabItem.icon"
+            :label="fabItem.label"
+            anchor="start"
+            @click="subArticleClk(fabItem.to)"
+          />
+        </q-fab>
       </q-toolbar>
     </q-header>
 
     <!-- 小屏底部导航 -->
-    <q-footer :class="themeStore.toolBarColor" class="lt-sm" reveal>
+    <q-footer
+      :class="themeStore.toolBarColor"
+      class="lt-sm"
+      v-show="useLayOutStateStore.homeHeader"
+      reveal
+    >
       <q-tabs
         dense
         :align="'justify'"
@@ -154,7 +128,7 @@
         indicator-color="transparent"
       >
         <q-route-tab
-          v-for="(tabsItem, i) in tabsMenu"
+          v-for="(tabsItem, i) in useUserInfo.role.menu"
           :key="i + 'footertabs'"
           :ripple="{ color: 'primary' }"
           :icon="tabsItem.icon"
@@ -169,7 +143,8 @@
 
     <q-page-container>
       <router-view v-slot="{ Component }">
-        <keep-alive>
+        <!-- 不缓存 /article/ 的路由 -->
+        <keep-alive :exclude="/\/article\/./">
           <component :is="Component" />
         </keep-alive>
       </router-view>
@@ -293,12 +268,42 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <!-- 图片查看器 -->
+    <q-dialog v-model="imgShow.model">
+      <q-img
+        :src="imgShow.src"
+        width="100vw"
+        class="overflow-hidden"
+        height="100vh"
+        fit="contain"
+      >
+        <template v-slot:loading>
+          <q-spinner-clock color="primary" />
+        </template>
+      </q-img>
+
+      <q-btn
+        color="white"
+        icon="close"
+        flat
+        class="fixed-top-right z-max"
+        @click.stop="imgShow.model = false"
+      />
+    </q-dialog>
   </q-layout>
 </template>
  
 
 <script setup>
-import { ref, provide, computed, onBeforeMount, onMounted } from "vue";
+import {
+  ref,
+  provide,
+  computed,
+  onBeforeMount,
+  onMounted,
+  reactive,
+} from "vue";
 import { useQuasar } from "quasar";
 import MenuDreaws from "./components/MenuDreaws.vue";
 import { theme } from "./stores/themeStore";
@@ -313,6 +318,57 @@ import { yzmRules, pwdRules, qqEmailRules } from "./utils/rules.js";
 import menuAndAuth from "./api/menuAndAuth.js";
 import md5 from "./utils/md5.js";
 import sse from "./utils/sse.js";
+import { useRouter } from "vue-router";
+import layOutStateStore from "./stores/layoutState.js";
+const useLayOutStateStore = layOutStateStore();
+
+const $r = useRouter();
+
+const subArticlesInfo = [
+  {
+    color: "secondary",
+    icon: "translate",
+    label: "博文",
+    to: "/articlesedit",
+  },
+
+  {
+    color: "positive",
+    icon: "music_note",
+    label: "音乐",
+    to: "/articlesedit",
+  },
+
+  {
+    color: "accent",
+    icon: "ondemand_video",
+    label: "视频",
+    to: "/articlesedit",
+  },
+
+  {
+    color: "yellow",
+    icon: "image",
+    label: "图片",
+    to: "/articlesedit",
+  },
+
+  {
+    color: "blue-grey",
+    icon: "access_time",
+    label: "草稿",
+    to: "/articlesedit",
+  },
+];
+
+// 点击编辑内容跳转
+const subArticleClk = (to) => {
+  const openUrl = $r.resolve({
+    path: to,
+  });
+  // 打开新窗口
+  window.open(openUrl.href);
+};
 
 const useUserInfo = useUserInfoStore();
 const themeStore = theme();
@@ -322,28 +378,31 @@ const $q = useQuasar(),
 
 const searchText = ref("");
 const addContent = ref(false);
-const drawer = ref(false);
 const placeholderText = ref("奥迪RS7奥迪RS7奥迪RS7");
 // 默认菜单
-const defaultMenu = [
-  {
-    to: "/home",
-    icon: "home",
-    label: "首页",
-  },
+const defaultRole = {
+  role: -1,
+  auth: [100, 103],
+  menu: [
+    {
+      to: "/home",
+      icon: "home",
+      label: "首页",
+    },
 
-  // {
-  //   to: "/admin",
-  //   icon: "security",
-  //   label: "管理",
-  // },
+    // {
+    //   to: "/admin",
+    //   icon: "security",
+    //   label: "管理",
+    // },
 
-  {
-    to: "/users",
-    icon: "person",
-    label: "我",
-  },
-];
+    {
+      to: "/users",
+      icon: "person",
+      label: "我",
+    },
+  ],
+};
 
 const gapSize = computed(() => {
   let gap = 8,
@@ -369,28 +428,33 @@ const gapSize = computed(() => {
 
 onBeforeMount(async () => {
   // 建立信息推送连接
-  // sse();
-  // const { email, token } = useUserInfo;
-  // if (token && email) {
-  //   const nt = new Date().getTime();
-  //   const maRes = await menuAndAuth({
-  //     nt,
-  //     sign: md5(email + nt + "menuAuth2024/3/5 21:35").toLocaleUpperCase(),
-  //   });
-  //   if (maRes.statu === 200) {
-  //     const { msg } = maRes,
-  //       { role } = msg;
-  //     tabsMenu.value = role.menu;
-  //     return true;
-  //   }
-  // }
-  // tabsMenu.value = defaultMenu;
+  sse();
+  const { email, token } = useUserInfo;
+  if (token && email) {
+    const nt = new Date().getTime();
+    const maRes = await menuAndAuth({
+      nt,
+      sign: md5(email + nt + "menuAuth2024/3/5 21:35").toLocaleUpperCase(),
+    });
+
+    if (maRes.statu === 200) {
+      const { msg } = maRes,
+        { role } = msg;
+      useUserInfo.role = role;
+      return true;
+    }
+  }
+  useUserInfo.role = defaultRole;
 });
 
+const imgShow = reactive({
+  src: "",
+  model: false,
+});
 provide("tabsMenu", tabsMenu);
-provide("drawer", drawer);
 provide("themeStore", themeStore);
 provide("gapSize", gapSize);
+provide("imgShow", imgShow);
 </script>
 
 <style lang="sass" scoped>
@@ -407,24 +471,6 @@ provide("gapSize", gapSize);
 
 .body--light
   background: $grey-3
-
-::-webkit-scrollbar-thumb:hover
-  background: $grey-7
-  cursor: pointer
-
-//  定义轨道的宽高{height定义的是横向轨道的高，width定义的是垂直轨道的宽} 
-::-webkit-scrollbar
-  width: v-bind('$q.screen.gt.xs?"8px":"0"')
-  background: v-bind('themeStore.dark?"black":"$grey-3"')
-
-//  定义的轨道的样式
-::-webkit-scrollbar-track
-  background-color: v-bind('themeStore.dark?"$grey":"$grey-3"')
-
-// 定义的滑块的样式 
-::-webkit-scrollbar-thumb
-  border-radius: 10px
-  background-color: $grey
 </style>
  
  

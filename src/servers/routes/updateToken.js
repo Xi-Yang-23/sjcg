@@ -5,8 +5,8 @@ import { hd, tokenSaveTime } from '../cfg.js'
 import { qqEmailRules } from "../../utils/rules.js";
 import Users from "../mongoose/models/usersModel.js";
 import { getToken } from "../jwt.js";
-import conDb from "../mongoose/index.js";
-import { disconnect } from "mongoose";
+// import { conn, closeConn } from "../mongoose/index.js";
+
 
 const { prikey, pubkey } = hd
 
@@ -46,13 +46,13 @@ const updateToken = async (req, res) => {
         })
     }
 
-    await conDb(1)//连接数据库
+    // await conn(1)//连接数据库
 
     // 查找用户
     const findUser = await Users.findOne({ email: deEmail })
     // 没有这个邮箱的用户
     if (!findUser) {
-        await disconnect()//销毁数据库连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 204
         })
@@ -63,7 +63,7 @@ const updateToken = async (req, res) => {
     const ntMsCha = new Date().getTime() - new Date(findUser.token.updatedAt).getTime()//当前时间戳-上一次toen更新时间戳
     // 3天未登陆过
     if (ntMsCha > tokenSaveTime) {
-        await disconnect()//销毁数据库连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 205
         })
@@ -74,7 +74,7 @@ const updateToken = async (req, res) => {
     const saveUserTokenCount = await findUser.save().catch(err => false)
     //token刷新次数达到上限。需重新登录
     if (!saveUserTokenCount) {
-        await disconnect()//销毁数据库连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 203
         })
@@ -85,7 +85,7 @@ const updateToken = async (req, res) => {
     let nowToken = getToken(deEmail),
         aesToken = AES(nowToken, aesKey)
     const desKey = nodeRsa(aesKey, pubkey, 1)
-    await disconnect()//销毁数据库连接
+    // closeConn()//关闭数据库连接
     res.json({
         token: aesToken,
         statu: 200,

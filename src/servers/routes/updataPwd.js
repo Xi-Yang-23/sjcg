@@ -6,8 +6,7 @@ import Users from "../mongoose/models/usersModel.js";
 import { qqEmailRules, pwdRules, yzmRules } from "../../utils/rules.js";
 import by from "../../utils/pwdBiDui.js";
 import Yzm from "../mongoose/models/yzmModel.js";
-import conDb from "../mongoose/index.js";
-import { disconnect } from "mongoose";
+// import { conn, closeConn } from "../mongoose/index.js";
 
 /**  
  * @api {post} /api/updatapwd 更新、忘记密码 
@@ -58,13 +57,13 @@ const updataPwd = async (req, res) => {
         })
     }
 
-    await conDb(1)//连接数据库
+    // await conn(1)//连接数据库
 
     // 校验通过
     const findUser = await Users.findOne({ email: nowEmail })
     // 邮箱不存在
     if (!findUser) {
-        await disconnect()//销毁数据库连接
+        //    closeConn()//关闭数据库连接
         return res.json({
             statu: 202,
         })
@@ -74,7 +73,7 @@ const updataPwd = async (req, res) => {
     const findYzm = await Yzm.findOne({ email: findUser.email })// 查找验证码     
     // 未找到验证码，验证码失效
     if (!findYzm) {
-        await disconnect()//销毁数据库连接
+        //    closeConn()//关闭数据库连接
         await res.json({
             statu: 203,
         })
@@ -83,7 +82,7 @@ const updataPwd = async (req, res) => {
 
     // 验证码错误
     if (findYzm.val !== Number(deYzm)) {
-        await disconnect()//销毁数据库连接
+        //    closeConn()//关闭数据库连接
         return res.json({
             statu: 204,
         })
@@ -92,7 +91,7 @@ const updataPwd = async (req, res) => {
     const isOldPwd = by(dePwd, findUser.pwd)
     // 与旧密码一样，拒绝更改
     if (isOldPwd) {
-        await disconnect()//销毁数据库连接
+        //    closeConn()//关闭数据库连接
         return res.json({
             statu: 206,
         })
@@ -104,7 +103,7 @@ const updataPwd = async (req, res) => {
     // 更新用户密码
     await Users.updateOne({ pwd: p })
 
-    await disconnect()//销毁数据库连接
+    //    closeConn()//关闭数据库连接
     // 更新成功
     res.json({
         statu: 200,

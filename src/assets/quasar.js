@@ -1,5 +1,5 @@
 import quasarLang from 'quasar/lang/zh-CN'
-import { Quasar, Notify } from 'quasar'
+import { Quasar, Notify, Dialog, LoadingBar } from 'quasar'
 
 // Import icon libraries
 // import '@quasar/extras/roboto-font/roboto-font.css'
@@ -18,15 +18,19 @@ import '@quasar/extras/material-icons-outlined/material-icons-outlined.css'
 // import '@quasar/extras/line-awesome/line-awesome.css'
 // import '@quasar/extras/bootstrap-icons/bootstrap-icons.css'
 
-// A few examples for animations from Animate.css:
-// import @quasar/extras/animate/fadeIn.css
-// import @quasar/extras/animate/fadeOut.css
+// A few examples for animations from Animate.css: 
+import '@quasar/extras/animate/backOutRight.css'
+import '@quasar/extras/animate/bounceInLeft.css'
+import '@quasar/extras/animate/zoomInDown.css'
+import '@quasar/extras/animate/zoomOutUp.css'
+import '@quasar/extras/animate/zoomOutLeft.css'
 
 // Import Quasar css
 import 'quasar/src/css/index.sass'
 
+
 export {
     quasarLang,
     Quasar,
-    Notify,
+    Notify, Dialog, LoadingBar
 }

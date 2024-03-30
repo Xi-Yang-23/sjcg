@@ -89,7 +89,7 @@ import { EditorWatchdog } from "@ckeditor/ckeditor5-watchdog";
 import { WordCount } from "@ckeditor/ckeditor5-word-count";
 import { Clipboard } from "@ckeditor/ckeditor5-clipboard";
 import { Base64UploadAdapter } from "@ckeditor/ckeditor5-upload";
-import NowTime from "./plugins/nowTime";
+import NowTime from "./plugins/nowTime.js";
 
 // 自定义插件
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
@@ -229,6 +229,12 @@ class Editor extends ClassicEditor {
           label: "75%",
           icon: "large",
         },
+        {
+          name: "resizeImage:100",
+          value: "100",
+          label: "100%",
+          icon: "large",
+        },
       ],
       toolbar: [
         "imageStyle:alignLeft",
@@ -268,21 +274,6 @@ class Editor extends ClassicEditor {
     style: {
       definitions: [
         {
-          name: "标题1",
-          element: "h2",
-          classes: ["document-title"],
-        },
-        {
-          name: "标题2",
-          element: "h3",
-          classes: ["category"],
-        },
-        {
-          name: "标题2-字幕",
-          element: "h3",
-          classes: ["document-subtitle"],
-        },
-        {
           name: "段落",
           element: "p",
           classes: ["info-box"],
@@ -308,7 +299,7 @@ class Editor extends ClassicEditor {
           classes: ["fancy-code", "fancy-code-dark"],
         },
         {
-          name: "代码块(明色)",
+          name: "代码块(亮色)",
           element: "pre",
           classes: ["fancy-code", "fancy-code-bright"],
         },

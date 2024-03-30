@@ -1,0 +1,33 @@
+// mac亮色主题
+.mac-light
+    color: black
+    background: #dddfe0
+    box-shadow: 5px 5px 0 #b3b3b3
+    border: 0
+    border-radius: 10px
+    .q-item__label
+        &:first-child
+            padding-top: 11px
+    .sub-date
+        color: #979797
+
+.mac-light
+    padding: 16px 16px 10px 16px
+
+.mac-light
+    &::before
+        content: ""
+        display: block
+        height: 10px
+        background: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NCAxMyI+CiAgPGNpcmNsZSBjeD0iNi41IiBjeT0iNi41IiByPSI2LjUiIGZpbGw9IiNGMzZCNUMiLz4KICA8Y2lyY2xlIGN4PSIyNi41IiBjeT0iNi41IiByPSI2LjUiIGZpbGw9IiNGOUJFNEQiLz4KICA8Y2lyY2xlIGN4PSI0Ny41IiBjeT0iNi41IiByPSI2LjUiIGZpbGw9IiM1NkM0NTMiLz4KPC9zdmc+Cg==) no-repeat
+
+// mac暗黑主题
+.mac-dark
+    @extend .mac-light
+    color: white
+    background: #272822
+    box-shadow: 5px 5px 0 #0000001f
+    .sub-date
+        color: #898989
+    .reply-comment-child.q-item__label--caption
+        color: #9b9b9b

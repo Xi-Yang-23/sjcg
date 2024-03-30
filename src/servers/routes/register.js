@@ -11,8 +11,7 @@ import {
 } from "../../utils/rules.js";
 import by from "../../utils/pwdBiDui.js";
 import newUserDir from "../newUserDir.js";
-import { disconnect } from "mongoose";
-import conDb from "../mongoose/index.js";
+// import { conn, closeConn } from "../mongoose/index.js";
 
 
 /**  
@@ -66,12 +65,12 @@ const register = async (req, res) => {
     }
 
     // 连接数据库
-    await conDb(1)
+    // await conn(1)
 
     const findEmail = await Users.findOne({ email: nowEmail })
     // 邮箱已被注册过
     if (findEmail) {
-        await disconnect()//销毁连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 202,
         })
@@ -81,7 +80,7 @@ const register = async (req, res) => {
     const findYzm = await Yzm.findOne({ email: nowEmail })//查找验证码
     // 未找到验证码，验证码失效
     if (!findYzm) {
-        await disconnect()//销毁连接
+        // closeConn()//关闭数据库连接
         return res.json({
             statu: 203,
         })
@@ -104,7 +103,7 @@ const register = async (req, res) => {
         }).save()
 
         await findYzm.deleteOne()
-        await disconnect()//销毁连接
+        // closeConn()//关闭数据库连接
 
         // 创建默认头像,背景,文件夹
         newUserDir(nowEmail)
@@ -115,8 +114,8 @@ const register = async (req, res) => {
 
     }
 
-    await disconnect()//销毁连接
     // 验证码错误
+    // closeConn()//关闭数据库连接
     res.json({
         statu: 204,
     })
