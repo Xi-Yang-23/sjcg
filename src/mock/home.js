@@ -1,6 +1,8 @@
 // 使用 Mock
 import Mock from 'mockjs'
 import comment from './video'
+import './extend.js'
+import { startData } from './user.js'
 
 
 Mock.setup({
@@ -25,13 +27,14 @@ const qdData = (firstRun) => {
     const lists = Mock.mock({
         'lists|10': [
             {
-                img: '@image(,@color)',
-                'author|1-5': '@cname',//用户名
+                img: '@myimg',
+                'uName|1-5': '@cname',//用户名
                 title: '@ctitle(5,100)',//标题
                 content: '@cparagraph',//简介
                 see: '@integer(0,10000)',//浏览 
                 likes: '@integer(0,10000)',//点赞
-                'avatar': '@image(,@color)',//作者头像
+                'avatar': '@myimg',//作者头像
+                date: '@date(T)',//时间戳
             }
         ]
     })
@@ -50,8 +53,8 @@ const homeTuiJian = Mock.mock({
     'lists|3': [
         // 视频
         {
-            'src': '@image(,@color)',//视频封面
-            'avatar': '@image(,@color)',//作者头像
+            'src': '@myimg',//视频封面
+            'avatar': '@myimg',//作者头像
             'type': 0,//类型 0视频 | 1贴子 | 2音乐
             'author|1-5': '@cname',//用户名
             'videoTime': '@date(hh:MM)',//发布日期
@@ -68,8 +71,8 @@ const homeTuiJian = Mock.mock({
         // 贴子
         {
             'tags|0-5': ['@cword(1,6)'],//标签
-            'srcs|0-10': ['@image(,@color)'],// 封面
-            'avatar': '@image(,@color)',//作者头像
+            'srcs|0-10': ['@myimg'],// 封面
+            'avatar': '@myimg',//作者头像
             'type': 1,//类型 0视频 | 1贴子 | 2音乐
             'author|1-5': '@cname',//用户名
             'subDate': '@date(yyyy/MM/dd)',//发布日期
@@ -84,8 +87,8 @@ const homeTuiJian = Mock.mock({
         // 音乐
         {
             'tags|0-5': ['@cword(1,6)'],//标签
-            'src': '@image(,@color)',// 封面
-            'avatar': '@image(,@color)',//作者头像
+            img: '@myimg',// 封面
+            'avatar': '@myimg',//作者头像
             'type': 2,//类型 0视频 | 1贴子 | 2音乐
             'author|1-8': '@cname',//作者
             'musicTime': '@time(HH:mm)',//歌曲时长
@@ -95,16 +98,11 @@ const homeTuiJian = Mock.mock({
             listen: '@integer(0,10000)',//听歌次数
             title: '@ctitle(1,30)',//标题
             content: '@cparagraph',//简介 
-        }
+            'musicSrc': '@music',//歌曲地址
+            'id': '@id',
+        },
     ],
 })
-
-// 首页模板
-const homeMcokTemplate = {
-    // 推荐数据
-    'lists': Mock.Random.shuffle(homeTuiJian.lists)
-
-}
 
 
 
@@ -128,8 +126,8 @@ const getHomeScrollData = () => {
             // 视频
             {
                 'tags|0-5': ['@cword(1,6)'],//标签
-                'src': '@image(,@color)',//视频封面
-                'avatar': '@image(,@color)',//作者头像
+                'src': '@myimg',//视频封面
+                'avatar': '@myimg',//作者头像
                 'type': 0,//类型 0视频 | 1贴子 | 2音乐
                 'author|1-5': '@cname',//用户名
                 'videoTime': '@time(HH:mm)',//歌曲时长
@@ -145,9 +143,9 @@ const getHomeScrollData = () => {
             // 贴子
             {
                 'tags|0-5': ['@cword(1,6)'],//标签
-                'srcs|0-10': ['@image(,@color)'],// 封面
+                'srcs|0-10': ['@myimg'],// 封面
                 'type': 1,//类型 0视频 | 1贴子 | 2音乐
-                'avatar': '@image(,@color)',//作者头像
+                'avatar': '@myimg',//作者头像
                 'author|1-5': '@cname',//用户名
                 'subDate': '@date(yyyy/MM/dd)',//发布日期
                 gf: '@boolean',//官方
@@ -161,10 +159,10 @@ const getHomeScrollData = () => {
             // 音乐
             {
                 'tags|0-5': ['@cword(1,6)'],//标签
-                'src': '@image(,@color)',// 封面
-                'avatar': '@image(,@color)',//作者头像
+                img: '@myimg',// 封面
+                'avatar': '@myimg',//作者头像
                 'type': 2,//类型 0视频 | 1贴子 | 2音乐
-                'author|7-10': '@cname',//作者
+                'author|1-8': '@cname',//作者
                 'musicTime': '@time(HH:mm)',//歌曲时长
                 'subDate': '@date(yyyy/MM/dd)',//发布日期
                 gf: '@boolean',//官方 
@@ -172,7 +170,9 @@ const getHomeScrollData = () => {
                 listen: '@integer(0,10000)',//听歌次数
                 title: '@ctitle(1,30)',//标题
                 content: '@cparagraph',//简介 
-            }
+                'musicSrc': '@music',//歌曲地址
+                'id': '@id',
+            },
         ]
     })
 
@@ -182,8 +182,7 @@ const getHomeScrollData = () => {
     }
 }
 
-// 首页
-// Mock.mock('/home', homeMcokTemplate)
+// 首页 
 // Mock.mock('/home/scroll/data', getHomeScrollData)
 
 Mock.mock('/home', getHomeScrollData)
@@ -209,12 +208,14 @@ Mock.mock('/home/music', (firstRun) => {
     const lists = Mock.mock({
         'lists|10': [
             {
-                img: '@image(,@color)',
+                img: '@myimg',
+                avatar: '@myimg',
                 'author|1-5': '@cname',//作者 
                 title: '@ctitle(5,100)',//标题  
-                listen: '@integer(0,10000)',//点赞
-                'musicTime': '@time(HH:mm)',//歌曲时长
-                musicSrc: 'http'
+                listen: '@integer(0,10000)',//听歌次数
+                'musicTime': '@time(HH:mm)',//歌曲时长 
+                'musicSrc': '@music',//歌曲地址
+                'id': '@id',
             }
         ]
     })
@@ -231,7 +232,7 @@ Mock.mock('/home/music', (firstRun) => {
 Mock.mock('/lunbo', {
     'carousel|1-6': [
         {
-            'src': "@image(,@color)",
+            'src': "@myimg",
             'caption': "@cparagraph",
             'hasTitle': '@boolean'
         }
@@ -247,3 +248,10 @@ Mock.mock('/lunbo', {
  * @param {Number}  count 获取几条
  */
 Mock.mock(/\/api\/comments.*?/, comment)
+
+
+/**
+ * !个人主页
+ */
+// 收藏
+Mock.mock(/\/api\/users.*?/, startData) 

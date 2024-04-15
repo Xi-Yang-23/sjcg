@@ -1,0 +1,34 @@
+:root
+    --music-bg: url('/testImg/photo0000-1246.jpg')
+
+.music-box
+    &::before
+        content: ''
+        position: absolute
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+        overflow: hidden
+        filter: blur(20px) brightness(50%)
+        background-size: cover
+        background-image: var(--music-bg)
+        background-position: 50%
+        transform: scale(1.5)
+
+.music-img-rotate
+    animation: linear 40s infinite rotate
+    transform-origin: center
+
+.music-img-paused
+    animation-play-state: paused
+
+.music-img-running
+    animation-play-state: running
+
+@keyframes rotate
+    0%
+        transform: rotate(0)
+
+    100%
+        transform: rotate(360deg)

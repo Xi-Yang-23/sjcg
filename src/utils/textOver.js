@@ -55,7 +55,6 @@ const textOverInit = (essOutEl, cfg, index = 0) => {
  * @param {Object} it 当前点击的配置
  */
 const textOverOpenClick = it => {
-    console.log(it);
     const { lines, once } = it;
     it.show === true ? it.active = "none" : it.active = lines
     if (once) it.dis = true;

@@ -1,11 +1,11 @@
 <template>
   <!-- 评论区组件 v-if="propsComments.comments"-->
   <q-card square flat :class="commentClass.parent">
-    <!-- 父级发布者信息 propsComments.comments.child-->
+    <!-- 父级发布者信息 propsComments.comments.child--> 
     <q-item :class="commentClass.childClass" class="q-pb-none">
       <q-item-section top avatar>
         <q-avatar class="cursor-pointer" size="md">
-          <q-img :src="propsComments.comments.userInfo.avatar">
+          <q-img :src="propsComments.comments.userInfo.avatar" :ratio="1">
             <template v-slot:loading>
               <q-spinner-orbit color="primary" size="xs" />
             </template>
@@ -22,7 +22,7 @@
 
       <!-- 昵称 <q-badge color="grey" label="置顶" />-->
       <q-item-section>
-        <q-item-label :lines="1" class="text-body1 text-grey-7">
+        <q-item-label :lines="1" class="text-body2 text-grey-7">
           {{ propsComments.comments.userInfo.uName }}
         </q-item-label>
 
@@ -126,9 +126,9 @@
         <q-card square flat v-if="itChidIt && !itChidIt.isDel">
           <!-- 子级评论发布者信息 -->
           <q-item class="q-pb-none" :inset-level="1">
-            <q-item-section top avatar class="comment-child-avatar q-pr-sm">
+            <q-item-section top avatar class="comment-child-avatar q-pr-sm"> 
               <q-avatar class="cursor-pointer" size="md">
-                <q-img :src="itChidIt.userInfo.avatar">
+                <q-img :src="itChidIt.userInfo.avatar" :ratio="1">
                   <template v-slot:loading>
                     <q-spinner-orbit color="primary" size="15px" />
                   </template>
@@ -145,7 +145,7 @@
 
             <!-- 昵称 -->
             <q-item-section>
-              <q-item-label :lines="1" class="text-body1 text-grey-7">
+              <q-item-label :lines="1" class="text-body2 text-grey-7">
                 {{ itChidIt.userInfo.uName }}
               </q-item-label>
 
@@ -288,11 +288,9 @@
           dense
           color="primary"
           icon-right="arrow_drop_down"
-          @click.stop="openComment('张开评论')"
+          @click.stop="openComment('展开评论')"
+          label="展开回复"
         >
-          <!-- <span class="text-primary text-weight-bold"> {{ propsComments.comments.childCount - renderChildCommentCount }} </span> -->
-          <q-item-label caption> 展开回复 </q-item-label>
-
           <template v-slot:loading>
             <q-spinner-comment size="sm" color="primary" />...
           </template>
@@ -341,6 +339,7 @@ const propsComments = defineProps({
     default: 0,
   },
 });
+
 
 /**
  * - loadChildComments 加载评论
@@ -695,7 +694,7 @@ const replyImgSize = computed(() => {
     content: ''
     height: 1px
     width: 25%
-    transform: translate(-95px,24px) scaleY(.25)
+    transform: translate(-105px,24px) scaleY(.25)
     background: grey
 </style>
  

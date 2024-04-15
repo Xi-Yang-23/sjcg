@@ -6,13 +6,7 @@
     v-if="loadStart.data.value"
   >
     <!-- 列表 -->
-    <q-card
-      flat
-      transition="scale"
-      v-for="(it, i) in loadStart.data.value"
-      :key="i + 'list-card'"
-      :class="'q-mb-' + gapSize.name"
-    >
+    <q-card flat v-for="(it, i) in tuiJian" :key="i + 'list-card'">
       <q-item clickable v-ripple>
         <!-- 贴子内容+标题 -->
         <q-item-section>

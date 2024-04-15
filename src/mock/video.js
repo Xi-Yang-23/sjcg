@@ -1,5 +1,23 @@
 // 使用 Mock
 import Mock from 'mockjs'
+import './extend.js'
+// console.log(
+//     Mock.mock({
+//         'music|10': [
+//             {
+//                 img: '@myimg',
+//                 avatar: '@myimg',
+//                 'author|1-5': '@cname',//作者 
+//                 title: '@ctitle(5,100)',//标题  
+//                 listen: '@integer(0,10000)',//听歌次数
+//                 'musicTime': '@time(HH:mm)',//歌曲时长 
+//                 'musicSrc':'@music',//歌曲地址
+//                 'id': '@id',
+//             }
+//         ]
+//     })
+// );
+
 
 
 const emjioLists = ['[嘿嘿]', '[对不起]', '[流口水]', '[偷看]', '[迷糊]', '[喝茶]', '[麻了]', '[摸脸]', '[再见]', '[委屈]', '[看看]', '[色笑]', '[眨眼]', '[看]', '[拜]', '[嗦舌]', '[生气]', '[抱抱]', '[委屈哭]', '[尬笑]', '[惊讶]', '[略略]', '[亲亲]', '[笑]', '[呜呜]', '[可恶]', '[嘻嘻]', '[委屈哭]', '[想吃]', '[哈喽]', '[比心]', '[闭眼]', '[心心]', '[咀嚼]', '[喜欢]', '[啊]', '[诺]', '[哈]', '[大笑]', '[超喜欢]', '[打call]', '[大哭]', '[吾]', '[打脸]', '[天呐]', '[很气]', '[酷]', '[满眼]', '[戳手指]', '[哟西]', '[笑一个]', '[嘻嘻嘻]', '[小笑]', '[啊这]', '[可爱]', '[打你]', '[哟]', '[亲一口]', '[啊啊啊]', '[赞]', '[吃瓜]', '[看]', '[找死]', '[偷笑]', '[镇定]', '[哦豁]', '[期待]', '[哎嘿]', '[嘻嘿]', '[吃一口]', '[好看]', '[666]', '[墨镜]', '[腮红]', '[加油]', '[裂开]', '[棒]', '[送花]', '[疑问]', '[啊]', '[闭眼1]', '[嗯1]', '[为什么]', '[戴口罩]', '[崇拜笑]', '[别这样]', '[流汗]', '[正常]', '[啊呵呵]', '[你完了]', '[太喜欢]', '[好笑]', '[正经2]', '[大哭]', '[滑稽]', '[没办法]', '[不开心]', '[戳]', '[大哭2]',]
@@ -55,7 +73,7 @@ const getChildComment = getInfo => {
                     return t + Mock.Random.pick(emjioLists)
                 },
                 // 评论的图dataImage 
-                'img|0-1': '@dataImage()'
+                'img|0-1': '@myimg'
             }
         })
 
@@ -73,13 +91,7 @@ const getChildComment = getInfo => {
         // 子级发布者信息
         const childUserInfo = {
             "uName": Mock.Random.cname(),//昵称
-            "avatar": Mock.Random.image(Mock.Random.pick([
-                '300x250', '250x250', '240x400', '336x280',
-                '180x150', '720x300', '468x60', '234x60',
-                '88x31', '120x90', '120x60', '120x240',
-                '125x125', '728x90', '160x600', '120x600',
-                '300x600'
-            ]), Mock.Random.color()),//用户头像
+            "avatar": Mock.mock('@myimg'),//用户头像
             "sex": Mock.Random.pick([0, 1]),//性别 
             // 认证徽章
             'authIcon': Mock.Random.boolean() ? '' : (`<svg
@@ -116,6 +128,8 @@ const getChildComment = getInfo => {
     });
     return replyCommentMsg(childComment)
 }
+
+
 
 /**
  * # 根据url获取query参数
@@ -197,13 +211,7 @@ const loadCommett = () => {
         // 父级发布者信息
         const parentUserInfo = {
             "uName": Mock.Random.cname(),//昵称
-            "avatar": Mock.Random.image(Mock.Random.pick([
-                '300x250', '250x250', '240x400', '336x280',
-                '180x150', '720x300', '468x60', '234x60',
-                '88x31', '120x90', '120x60', '120x240',
-                '125x125', '728x90', '160x600', '120x600',
-                '300x600'
-            ]), Mock.Random.color()),//用户头像
+            "avatar": Mock.mock('@myimg'),//用户头像
             "sex": Mock.Random.pick([0, 1]),//性别 
             // 认证徽章
             'authIcon': Mock.Random.boolean() ? '' : (`<svg
@@ -259,7 +267,7 @@ const loadCommett = () => {
                     return t + Mock.Random.pick(emjioLists)
                 },
                 // 评论的图dataImage 
-                'img|0-1': '@dataImage()'
+                'img|0-1': '@myimg'
             }
         })
 
@@ -309,7 +317,7 @@ const loadCommett = () => {
                         return t + Mock.Random.pick(emjioLists)
                     },
                     // 评论的图dataImage 
-                    'img|0-1': '@dataImage()'
+                    'img|0-1': '@myimg'
                 }
             })
 
@@ -326,13 +334,7 @@ const loadCommett = () => {
             // 子级发布者信息
             const childUserInfo = {
                 "uName": Mock.Random.cname(),//昵称
-                "avatar": Mock.Random.image(Mock.Random.pick([
-                    '300x250', '250x250', '240x400', '336x280',
-                    '180x150', '720x300', '468x60', '234x60',
-                    '88x31', '120x90', '120x60', '120x240',
-                    '125x125', '728x90', '160x600', '120x600',
-                    '300x600'
-                ]), Mock.Random.color()),//用户头像
+                "avatar": Mock.mock('@myimg'),//用户头像
                 "sex": Mock.Random.pick([0, 1]),//性别 
                 // 认证徽章
                 'authIcon': Mock.Random.boolean() ? '' : (`<svg
@@ -371,7 +373,6 @@ const loadCommett = () => {
 
     return arr
 }
-
 /**
  * 生成评论
  */

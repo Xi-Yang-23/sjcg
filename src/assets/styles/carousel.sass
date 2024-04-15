@@ -1,0 +1,28 @@
+// todo 轮播样式
+.carousel:deep(.q-carousel__slide)
+    padding: 0
+
+.caruse-progress
+    width: 30px
+    height: 3px
+    background: rgba(185, 185, 185, 0.95)
+
+.carouse-progress-active
+    &::after
+        content: '',
+        width: 0
+        height: 100%
+        background: white
+        position: absolute
+        left: 0
+        top: 0
+        animation: 3000ms linear carouse-progress
+
+@keyframes carouse-progress
+    from
+        width: 0
+    to
+        width: 100%
+
+.carousel:deep(.q-carousel__slide)
+    padding: 0

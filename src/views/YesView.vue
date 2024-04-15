@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <q-item v-for="(it, i) in showOrHideTextStatu">
+    <!-- <q-item v-for="(it, i) in showOrHideTextStatu">
       <q-item-section>
         <q-item-label
           caption
@@ -26,7 +26,7 @@
           @update:model-value="textOverOpenClick(it)"
         />
       </q-item-section>
-    </q-item>
+    </q-item> -->
     <!--  animated bounceInLeft slow -->
     <!-- srcElement.offsetParent.offsetParent -->
     <q-infinite-scroll @load="onLoad" :offset="250" class="cont">
@@ -60,6 +60,24 @@ import { TextPlugin } from "gsap/TextPlugin";
 import { nextTick, onMounted, ref } from "vue";
 import { anInit, createBatch } from "../utils/animate";
 import { textOverInit, textOverOpenClick } from "../utils/textOver";
+import MusicPlayAnimate from "../components/music/MusicPlayAnimate.vue";
+// import jdTags from "jsmediatags/dist/jsmediatags.min.js?raw";
+
+const src = ref();
+const mp3 = new URL(
+  "../../public/music/Ki丷 - 日不落（咕咚DJ）.mp3",
+  import.meta.url
+).href;
+
+const playMusicIndex = ref(-1);
+const musicState = ref(false);
+const musicPlay = (index) => {
+  if (index === playMusicIndex.value)
+    return (musicState.value = !musicState.value);
+
+  playMusicIndex.value = index;
+  musicState.value = true;
+};
 
 /**
  * @lines String|number default:1 动态改变的数值，例如： 1 2 3.... 。none 没有限制
@@ -117,12 +135,37 @@ const onLoad = (i, t) => {
     ScrollTrigger.refresh();
   }, 1000);
 };
-onMounted(() => {
-  anInit(".box");
-  console.log(essOutEl.value);
-  textOverInit(essOutEl.value, showOrHideTextStatu.value, 0);
+
+onMounted(async () => {
+  // anInit(".box");
+  // console.log(essOutEl.value);
+  // textOverInit(essOutEl.value, showOrHideTextStatu.value, 0);
+  // new Function(jdTags)();
+  // console.log(mp3);
+  // // From remote host
+  // jsmediatags.read(mp3, {
+  //   onSuccess: function (tag) {
+  //     console.log(tag);
+  //     // const { data, format } = tag.tags.picture;
+  //     // let base64String = "";
+  //     // for (let i = 0; i < data.length; i++) {
+  //     //   base64String += String.fromCharCode(data[i]);
+  //     // }
+  //     // src.value = `data:${format};base64,${window.btoa(base64String)}`;
+  //     // const src = `data:${format};base64,${window.btoa(base64String)}`;
+  //     // console.log(data, format);
+  //     // console.log(src.value );
+  //     // console.log(src);
+  //   },
+  //   onError: function (error) {
+  //     console.log(error);
+  //     console.log("error");
+  //   },
+  // });
 });
-</script>
+</script> 
 
 <style lang="sass">
+.draging
+  opacity: 1 !important
 </style>

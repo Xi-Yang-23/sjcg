@@ -3,6 +3,7 @@
     v-model="useLayOutStateStore.dreaws"
     :width="200"
     :breakpoint="599.99"
+    show-if-above
   >
     <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
       <div class="lt-sm flex justify-center items-center">

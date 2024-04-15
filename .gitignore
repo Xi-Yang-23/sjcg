@@ -10,9 +10,12 @@ lerna-debug.log*
 node_modules
 users
 .DS_Store
+/public/imgs
+/public/testImg
+/public/music
+/public/*.mp4
 dist
 dist-ssr
-public/imgs
 coverage
 *.local
 

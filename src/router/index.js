@@ -1,37 +1,52 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import layOutStateStore from '../stores/layoutState'
+import { Screen } from 'quasar'
+import musicStore from "../stores/musicStore";
 
 
 
 const routes = [
+  {
+    path: '/',
+    redirect: 'home',
+  },
+
   // 首页
   {
     path: '/home',
-    component: HomeView,
-    children: [
-      {
-        path: '',
-        name: 'home',
-        alias: '/',
-        component: () => import('../views/home/TuiJianView.vue'),
-      },
+    alias: '/',
+    name: 'home',
+    component: () => import('../views/HomeView.vue'),
+    // children: [
+    //   {
+    //     path: '',
+    //     name: 'home',
+
+    //   },
 
 
-      {
-        path: 'music',
-        component: () => import('../views/home/musicView.vue'),
-      },
-      {
-        path: 'hd',
-        component: () => import('../views/home/HdView.vue'),
-      },
-      {
-        path: 'qd',
-        component: () => import('../views/home/QdView.vue'),
-      },
-    ]
+    //   {
+    //     path: 'music',
+    //     component: () => import('../views/home/musicView.vue'),
+    //   },
+    //   {
+    //     path: 'hd',
+    //     component: () => import('../views/home/HdView.vue'),
+    //   },
+    //   {
+    //     path: 'qd',
+    //     component: () => import('../views/home/QdView.vue'),
+    //   },
+    // ]
   },
+
+  // 发现
+  {
+    path: '/faxian',
+    name: 'faxian',
+    component: () => import('../views/FaXianView.vue'),
+  },
+
 
   // 用户
   {
@@ -83,12 +98,13 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const useLayOutStateStore = layOutStateStore()
+  const useMusicStore = musicStore();
+
   const { name } = to
   // 文章编辑
   if (name === 'articleEdit') {
     useLayOutStateStore.homeHeader = false
     useLayOutStateStore.homeFooter = false
-    useLayOutStateStore.dreaws = false
   }
 
 
@@ -96,14 +112,20 @@ router.beforeEach((to) => {
   if (name === 'video') {
     useLayOutStateStore.homeHeader = false
     useLayOutStateStore.homeFooter = false
-    useLayOutStateStore.dreaws = false
+    if (Screen.gt.xs) useMusicStore.miniOffset = [0, 50]
   }
 
   // 首页
   if (name === 'home' || name === 'ysego' || name === 'admin' || name === 'users') {
     useLayOutStateStore.homeHeader = true
     useLayOutStateStore.homeFooter = true
-    useLayOutStateStore.dreaws = true
+  }
+
+  if (Screen.xs) {
+    if (name === 'faxian') useMusicStore.miniOffset = [0, 0]
+  } else {
+    if (name === 'faxian' || name === 'users') useMusicStore.miniOffset = [0, 50]
+    if (name === 'home') useMusicStore.miniOffset = [0, 0]
   }
 
 

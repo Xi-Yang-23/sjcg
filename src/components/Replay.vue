@@ -197,7 +197,7 @@
       </q-card>
     </transition>
 
-    <!-- 输入框  :style="{ width: `calc(${videoInfoHeight.w} - 248px)` }"-->
+    <!-- 输入框 -->
     <q-item class="q-px-sm">
       <q-item-section class="overflow-hidden full-wdith">
         <!-- 回复的人 -->
@@ -789,7 +789,7 @@ import {
   replyThemeClk,
   closeReplyComment,
 } from "../common/reply";
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { Screen } from "quasar";
 
 // 屏幕变化情况输入框
@@ -799,7 +799,6 @@ watch(
 );
 
 const props = defineProps(["bigScreen"]);
-
 /**
  * 检测是否可发送评论
  */

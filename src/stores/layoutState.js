@@ -4,7 +4,7 @@ const layOutStateStore = defineStore('layOutStateStore', {
     state: () => ({
         homeHeader: true,//首页header
         homeFooter: true,//首页footer
-        dreaws: true,//侧边栏
+        dreaws: false,//侧边栏
     }),
 
     actions: {

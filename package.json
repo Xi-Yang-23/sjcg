@@ -21,6 +21,7 @@
     "express": "^4.18.2",
     "gsap": "^3.12.5",
     "jsencrypt": "^3.3.2",
+    "jsmediatags": "^3.9.7",
     "jsonwebtoken": "^9.0.2",
     "mockjs": "^1.1.0",
     "mongoose": "^8.2.0",
@@ -30,9 +31,11 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "prismjs": "^1.29.0",
     "quasar": "^2.14.2",
+    "sortablejs": "^1.15.2",
     "vue": "^3.3.12",
     "vue-router": "^4.2.5",
-    "xgplayer": "^3.0.14"
+    "xgplayer": "^3.0.15",
+    "xgplayer-music": "^3.0.15"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.6.0",

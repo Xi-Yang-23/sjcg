@@ -1,21 +1,30 @@
+# 安装文档编辑器
+- 进入**ckeditor5文件夹**执行`cnpm i`
+- `npm run build` 打包编辑器 
+ 
+
 # start
 ```sh
 cnpm i
 ```
 
 # 把本地编辑器加入项目
+- 若项目中的`package.json`有`ckeditor5-build`就删除，没有不做任何操作
+```sh
+ckeditor5-build
+```
 ```sh
 cnpm i ./ckeditor5
 ```
 
 # 运行
 ```sh
-cnpm run dev
+npm run dev
 ```
 
 # 打包
 ```sh
-cnpm run build
+npm run build
 ```
 
 #　注意

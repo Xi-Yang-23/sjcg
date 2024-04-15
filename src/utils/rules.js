@@ -112,24 +112,26 @@ const giveGxinRule = val => {
     if (len > 4) return '只能输入4位数字，最多9999'
     const test = /\d/.test(val)
 
-    if (test) return true
+    const res = val > 0 && val < 10000
+    if (test && res) return true
 
-    return '只能输入数字'
+    return '输入1-4位数字'
 }
 
 /**
- * 收藏夹名称校验 2-30字符之间
+ * 收藏夹名称校验 2-50字符之间
  * @param {String} val 校验的文本
  * @returns Boolean
  */
 const newColsRule = val => {
+    if (!val) return false
 
     const replaceSpace = val.replace(/\s/gi, ''),
         valLen = replaceSpace.length;
 
-    if (!valLen) return false
+    if (!valLen) return '输入2-50字符之间'
 
-    if (valLen >= 2 && valLen < 30) return true
+    if (valLen >= 2 && valLen < 50) return true
 
 }
 

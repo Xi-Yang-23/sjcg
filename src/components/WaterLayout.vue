@@ -92,7 +92,7 @@ const waterlayoutItInfo = computed(() => {
  * 瀑布流布局
  * @param UpData {Boolean} 数据是否更新
  */
-const waterLayouts = (UpData = 0) => {
+let waterLayouts = (UpData = 0) => {
   let cls = waterlayoutItInfo.value.cls; //列数
   let gap = waterlayoutItInfo.value.gap; //间距
 

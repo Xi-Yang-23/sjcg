@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 import { Dialog, Notify } from "quasar";
-import gloabStore from "../stores/gloabStore";
+import gloabStore from "../stores/starUpGxStrore";
 const useGloabStore = gloabStore();
 
 /**
@@ -114,12 +114,7 @@ const guanZhu = () => {
     }
 }
 
-/**
- * 收藏按钮
- */
-const starCik = () => {
 
-}
 
 
 /**
@@ -191,16 +186,6 @@ const openDialog = t => {
 
 
 
-/**
- * 贡献值列表
- */
-const loadGiveGxList = (index, done) => {
-    const arr = [1, 2, 3, 5]
-    setTimeout(() => {
-        videoInfo.gxList.splice(videoInfo.gxList.length, 0, ...arr)
-        done()
-    }, 1000);
-}
 
 
 
@@ -231,10 +216,10 @@ const delVideo = () => {
 }
 export {
     videoInfo,
-    guanZhu, starCik,
+    guanZhu,
     giveGonXian, commentSort, editVideoSub,
     clockOrLockVideo,
-    delVideo, openDialog, loadGiveGxList,
+    delVideo, openDialog,
 
     huGuang
 }
