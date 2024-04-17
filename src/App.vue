@@ -1074,8 +1074,10 @@
       v-if="useGloabStore.showNewStarModel"
       transition-show="slide-up"
       transition-hide="slide-up"
+      class="z-max"
       persistent
       :full-width="useGloabStore.createStarDialogShowType.fullWidth"
+      @hide="useGloabStore.editOrCreateStarHide"
     >
       <!-- 编辑收藏夹信息 -->
       <q-card
@@ -1088,18 +1090,31 @@
 
         <q-card-section>
           <!-- 编辑收藏夹信息 -->
-          <q-item key="star-crate" clickable v-ripple>
+          <q-item
+            key="star-crate"
+            clickable
+            v-ripple
+            @click="useGloabStore.imgClick"
+          >
+            <!-- 拾取图片组件 -->
+            <q-file
+              v-model="imgModel"
+              accept="image/*"
+              ref="imgComp"
+              class="hidden"
+              @update:model-value="useGloabStore.starImgCheckUpEv"
+            />
             <q-item-section>更换封面</q-item-section>
             <q-item-section avatar>
               <q-avatar
                 rounded
                 size="5.5em"
-                v-if="
-                  useGloabStore.editStarObj.img &&
-                  useGloabStore.editStarObj.img.length
-                "
+                v-if="useGloabStore.editStarImgAndTitleModel.img.length"
               >
-                <q-img :src="useGloabStore.editStarObj.img" :ratio="1" />
+                <q-img
+                  :src="useGloabStore.editStarImgAndTitleModel.img"
+                  :ratio="1"
+                />
               </q-avatar>
               <q-avatar
                 v-else
@@ -1114,7 +1129,7 @@
           <!--编辑框 -->
           <div>
             <q-input
-              v-model="useGloabStore.editStarObj.title"
+              v-model="useGloabStore.editStarImgAndTitleModel.title"
               :debounce="100"
               :maxlength="50"
               counter
@@ -1433,7 +1448,11 @@ import md5 from "./utils/md5.js";
 import sse from "./utils/sse.js";
 import { useRouter } from "vue-router";
 import layOutStateStore from "./stores/layoutState.js";
-import gloabStore, { diaLogEl } from "./stores/starUpGxStrore";
+import gloabStore, {
+  diaLogEl,
+  imgModel,
+  imgComp,
+} from "./stores/starUpGxStrore";
 import musicStore, { musicVizCanvas } from "./stores/musicStore";
 import { newColsRule } from "./utils/rules";
 

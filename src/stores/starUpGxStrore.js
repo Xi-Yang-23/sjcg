@@ -1,9 +1,13 @@
 import { defineStore } from 'pinia'
-import { Dialog, Loading, Notify, QSpinnerOrbit, Screen } from 'quasar'
+import { Dialog, Loading, Notify, QSpinnerOrbit, Screen, QSpinnerGears } from 'quasar'
 import { anInit, getBatchs, killBatchs, createBatch, anRefresh, showBatch } from "../utils/animate";
 import { nextTick, ref } from 'vue';
 import { giveGxinRule, newColsRule, userNameReplace } from '../utils/rules';
 import useUserInfoStore from './userInfo';
+import Compressor from 'compressorjs';
+
+const imgModel = ref(null),
+    imgComp = ref(null)
 
 
 const diaLogEl = ref()
@@ -27,7 +31,8 @@ const gloabStore = defineStore('gloabStore', {
         /**
          * # 编辑的收藏夹信息
          */
-        editStarObj: { img: '', title: '', id: '' },
+        editStarObj: {},
+        editStarImgAndTitleModel: { img: '', title: '' },
 
 
 
@@ -176,7 +181,7 @@ const gloabStore = defineStore('gloabStore', {
         * 修改收藏夹按钮disabled 
         */
         upStarBtnDisabled() {
-            return newColsRule(this.editStarObj.title) === true ? false : true
+            return newColsRule(this.editStarImgAndTitleModel.title) === true ? false : true
         },
 
 
@@ -320,10 +325,79 @@ const gloabStore = defineStore('gloabStore', {
          */
         /**
          * 更新收藏夹信息
+         * !发起更新网络请求
          */
         updateStarInfo() {
-            const { img, id, title } = this.editStarObj
-            console.log('更新收藏夹信息', img, id, title);
+            const { title: editTitle, img: editImg } = this.editStarImgAndTitleModel
+            const repImg = editImg === this.editStarObj.img,
+                repTitle = editTitle === this.editStarObj.title;
+
+            if (repImg && repTitle) return this.newStarModel = false
+
+            /**
+             * todo 开始发起网络请求
+             */
+            Loading.show({
+                spinner: QSpinnerGears,
+                spinnerColor: 'white',
+                messageColor: 'white',
+                spinnerSize: 'md',
+                message: "请稍等..."
+            })
+
+
+            /**
+             * ? 模拟网络请求
+             */
+            setTimeout(() => {
+                if (!repImg) this.editStarObj.img = editImg
+                if (!repTitle) this.editStarObj.title = editTitle
+                console.log('更新收藏夹信息', this.editStarObj);
+                Loading.hide()
+                this.newStarModel = false
+            }, 1000);
+        },
+       
+        /**
+         * 新建、编辑弹窗隐藏事件
+         */
+        editOrCreateStarHide() {
+            this.showNewStarModel = false
+        },
+
+
+        /**
+         * 收藏编辑，图片click事件
+         * @param {Object} it 编辑的收藏数据
+         */
+        imgClick() {
+            imgComp.value.pickFiles()
+        },
+
+        /**
+         * 收藏编辑，图片选取事件 
+         * @param {File|Blob} imgData 拾取的图片数据
+         */
+        starImgCheckUpEv(imgVal) {
+            const { size } = imgVal
+            let quality = .6
+
+            // 大于5m
+            if (size > 5000000) {
+                quality = 0
+            } else if (size > 1000000) {
+                quality = .3
+            }
+
+            new Compressor(imgVal, {
+                quality,
+                convertSize: 500000,
+                success: (res) => {
+                    const url = URL.createObjectURL(res);
+                    this.editStarImgAndTitleModel.img = url
+                }
+            }
+            )
         },
 
 
@@ -337,10 +411,13 @@ const gloabStore = defineStore('gloabStore', {
             this.showNewStarModel = true
             this.newStarModel = true
 
+            // 编辑收藏夹
             if (editInfo) {
-                const { img, id, title } = editInfo
-                this.editStarObj = { img, id, title }
-                console.log(this.editStarObj);
+                const { title, img } = editInfo
+                this.editStarImgAndTitleModel.title = title
+                this.editStarImgAndTitleModel.img = img
+                this.editStarObj = editInfo
+                console.log('编辑收藏夹', this.editStarObj);
             }
         },
 
@@ -579,5 +656,7 @@ const gloabStore = defineStore('gloabStore', {
 export default gloabStore
 
 export {
-    diaLogEl, giveGxianListEl
+    diaLogEl, giveGxianListEl,
+    imgModel, imgComp
+
 }

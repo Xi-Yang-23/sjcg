@@ -129,7 +129,7 @@
         <!-- 简介 -->
         <q-card-section class="q-pt-none cursor-pointer" @click="userClk(3)">
           <!-- {{ userInfoStore.describe }} -->
-          简介简介简介简介简介简介简介简介简介简介简介简介简介简介
+          简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介简介
         </q-card-section>
       </q-card>
       <!-- tab -->
